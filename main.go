@@ -16,8 +16,8 @@ var myMap = make(map[int]bool)
 
 func main() {
 	var initData Data
-	initData.lengthRow = 10
-	initData.amountRow = 10
+	initData.lengthRow = 5
+	initData.amountRow = 5
 	initData.maxNumber = 100
 
 	err := ValidateData(initData.lengthRow, initData.amountRow, initData.maxNumber)
