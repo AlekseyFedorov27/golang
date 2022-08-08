@@ -12,17 +12,12 @@ type Data struct {
 	maxNumber int
 }
 
-//    initData := Data{
-// 	lengthRow= 5,
-// 	amountRow= 5,
-// 	maxNumber= 100,
-//   }
 var myMap = make(map[int]bool)
 
 func main() {
 	var initData Data
-	initData.lengthRow = 5
-	initData.amountRow = 5
+	initData.lengthRow = 10
+	initData.amountRow = 10
 	initData.maxNumber = 100
 
 	err := ValidateData(initData.lengthRow, initData.amountRow, initData.maxNumber)
@@ -31,56 +26,42 @@ func main() {
 		return
 	}
 
-	arr := generateArr(initData.lengthRow, initData.amountRow, initData.maxNumber)
-
-	fmt.Println(initData)
-	fmt.Println(arr)
+	generate(initData.lengthRow, initData.amountRow, initData.maxNumber)
 }
 
-func generateArr(lengthRow, amountRow, maxNumber int) []int {
-	return generateRow(lengthRow, maxNumber)
+func generate(lengthRow, amountRow, maxNumber int) {
+	shuffleArr := generateShuffleArr(maxNumber)
+	res := sliceArr(shuffleArr, lengthRow, amountRow, maxNumber)
+	printResult(res)
 }
 
-func getRndNumber(max int) int {
+func printResult(arr [][]int) {
+	for _, row := range arr {
+		fmt.Println(row)
+	}
+}
+
+func generateShuffleArr(maxNumber int) []int {
+	a := make([]int, maxNumber)
+
+	for i := 0; i < maxNumber; i++ {
+		a[i] = i
+	}
+
 	rand.Seed(time.Now().UnixNano())
-	return rand.Intn(max + 1)
-}
-
-func generateRndNumber1(max int) func() int {
-	var myMap = make(map[int]bool)
-	myMap[0] = true
-
-	return func() int {
-		rnd := getRndNumber(max)
-
-		if myMap[rnd] == true {
-			rnd = getRndNumber(max)
-			fmt.Println("myMap", myMap)
-		} else {
-			myMap[rnd] = true
-			fmt.Println("rnd", rnd)
-		}
-		fmt.Println("myMap", myMap)
-		return rnd
+	for i := len(a) - 1; i > 0; i-- {
+		j := rand.Intn(i + 1)
+		a[i], a[j] = a[j], a[i]
 	}
+	return a
 }
 
-func generateRndNumber() func(int) int {
-	sum := 0
-	return func(x int) int {
-		sum += x
-		fmt.Println("ааа", sum)
-		return sum
-	}
-}
+func sliceArr(arr []int, lengthRow, amountRow, maxNumber int) [][]int {
+	res := make([][]int, 0)
 
-func generateRow(lengthRow, maxNumber int) []int {
-	res := []int{}
-	for i := 0; i <= lengthRow; i++ {
-		rnd := generateRndNumber()(maxNumber)
-
-		fmt.Println("иии", rnd)
-		res = append(res, rnd)
+	for i := 0; i < amountRow; i++ {
+		row := arr[i*lengthRow : i*lengthRow+lengthRow]
+		res = append(res, row)
 	}
 	return res
 }
